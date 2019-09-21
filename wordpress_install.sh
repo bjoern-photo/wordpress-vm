@@ -62,41 +62,41 @@ stop_if_installed mysql-common
 stop_if_installed mariadb-server
 
 # Create $SCRIPTS dir
-if [ ! -d "$SCRIPTS" ]
-then
-    mkdir -p "$SCRIPTS"
-fi
-
-# Change DNS
-install_if_not resolvconf
-yes | dpkg-reconfigure --frontend=noninteractive resolvconf
-echo "nameserver 9.9.9.9" > /etc/resolvconf/resolv.conf.d/base
-echo "nameserver 149.112.112.112" >> /etc/resolvconf/resolv.conf.d/base
-
-# Check network
-test_connection
+#if [ ! -d "$SCRIPTS" ]
+#then
+#    mkdir -p "$SCRIPTS"
+#fi
+#
+## Change DNS
+#install_if_not resolvconf
+#yes | dpkg-reconfigure --frontend=noninteractive resolvconf
+#echo "nameserver 9.9.9.9" > /etc/resolvconf/resolv.conf.d/base
+#echo "nameserver 149.112.112.112" >> /etc/resolvconf/resolv.conf.d/base
+#
+## Check network
+#test_connection
 
 # Check where the best mirrors are and update
-print_text_in_color "$ICyan" "Your current server repository is: $REPO"
-if [[ "no" == $(ask_yes_or_no "Do you want to try to find a better mirror?") ]]
-then
-    print_text_in_color "$ICyan" "Keeping $REPO as mirror..."
-    sleep 1
-else
-   print_text_in_color "$ICyan" "Locating the best mirrors..."
-   apt update -q4 & spinner_loading
-   apt install python-pip -y
-   pip install \
-       --upgrade pip \
-       apt-select
-    apt-select -m up-to-date -t 5 -c
-    sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup && \
-    if [ -f sources.list ]
-    then
-        sudo mv sources.list /etc/apt/
-    fi
-fi
-clear
+#print_text_in_color "$ICyan" "Your current server repository is: $REPO"
+#if [[ "no" == $(ask_yes_or_no "Do you want to try to find a better mirror?") ]]
+#then
+#    print_text_in_color "$ICyan" "Keeping $REPO as mirror..."
+#    sleep 1
+#else
+#   print_text_in_color "$ICyan" "Locating the best mirrors..."
+#   apt update -q4 & spinner_loading
+#   apt install python-pip -y
+#   pip install \
+#       --upgrade pip \
+#       apt-select
+#    apt-select -m up-to-date -t 5 -c
+#    sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup && \
+#    if [ -f sources.list ]
+#    then
+#        sudo mv sources.list /etc/apt/
+#    fi
+#fi
+#clear
 
 # Set keyboard layout
 print_text_in_color "$ICyan" "Current keyboard layout is $(localectl status | grep "Layout" | awk '{print $3}')"
